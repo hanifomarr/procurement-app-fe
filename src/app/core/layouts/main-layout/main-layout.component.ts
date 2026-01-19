@@ -1,10 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatMenuModule } from '@angular/material/menu';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-main-layout',
@@ -17,7 +19,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatButtonModule,
     MatIconModule,
     MatDividerModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatMenuModule
   ],
   template: `
     <div class="flex h-screen bg-slate-50 font-sans text-slate-900">
@@ -29,7 +32,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
             <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white">
               <mat-icon class="text-lg">shopping_basket</mat-icon>
             </div>
-            <span class="text-lg font-bold tracking-tight text-slate-800">Procurement App</span>
+            <span class="text-lg font-bold tracking-tight text-slate-800">ProcureFlow</span>
           </div>
         </div>
 
@@ -70,16 +73,23 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
         <!-- Profile / Footer -->
         <div class="p-4 border-t border-slate-200">
-          <div class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 cursor-pointer transition-colors">
-            <div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-bold">
-              U
+          <div [matMenuTriggerFor]="profileMenu" class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 cursor-pointer transition-colors">
+            <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
+              {{ (user()?.name || 'U').charAt(0).toUpperCase() }}
             </div>
             <div class="flex-1 min-w-0">
-              <p class="text-sm font-bold text-slate-800 truncate">User</p>
-              <p class="text-xs text-slate-500 truncate">Staff</p>
+              <p class="text-sm font-bold text-slate-800 truncate">{{ user()?.name }}</p>
+              <p class="text-xs text-slate-500 truncate">{{ user()?.email }}</p>
             </div>
-            <mat-icon class="text-slate-400 text-sm">more_vert</mat-icon>
+            <mat-icon class="text-slate-400 text-sm">unfold_more</mat-icon>
           </div>
+          
+          <mat-menu #profileMenu="matMenu" class="rounded-2xl border border-slate-100 shadow-xl">
+            <button mat-menu-item (click)="logout()" class="text-red-600 font-medium">
+              <mat-icon class="text-red-500">logout</mat-icon>
+              <span>Logout</span>
+            </button>
+          </mat-menu>
         </div>
       </aside>
 
@@ -118,7 +128,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
       height: 100vh;
     }
     
-    /* Custom Mat Icon Tweak */
     .mat-icon {
       font-size: 20px;
       width: 20px;
@@ -129,4 +138,11 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     }
   `]
 })
-export class MainLayoutComponent {}
+export class MainLayoutComponent {
+  private authService = inject(AuthService);
+  user = this.authService.currentUser;
+
+  logout() {
+    this.authService.logout();
+  }
+}
