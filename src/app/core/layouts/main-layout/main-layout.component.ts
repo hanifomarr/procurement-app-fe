@@ -29,7 +29,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
             <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white">
               <mat-icon class="text-lg">shopping_basket</mat-icon>
             </div>
-            <span class="text-lg font-bold tracking-tight text-slate-800">ProcureFlow</span>
+            <span class="text-lg font-bold tracking-tight text-slate-800">Procurement App</span>
           </div>
         </div>
 
@@ -72,11 +72,11 @@ import { MatTooltipModule } from '@angular/material/tooltip';
         <div class="p-4 border-t border-slate-200">
           <div class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 cursor-pointer transition-colors">
             <div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-bold">
-              JD
+              U
             </div>
             <div class="flex-1 min-w-0">
-              <p class="text-sm font-bold text-slate-800 truncate">John Doe</p>
-              <p class="text-xs text-slate-500 truncate">Procurement Manager</p>
+              <p class="text-sm font-bold text-slate-800 truncate">User</p>
+              <p class="text-xs text-slate-500 truncate">Staff</p>
             </div>
             <mat-icon class="text-slate-400 text-sm">more_vert</mat-icon>
           </div>
@@ -86,7 +86,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
       <!-- Main Content Area -->
       <div class="flex-1 flex flex-col min-w-0">
         <!-- Topbar -->
-        <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 z-10">
+        <header class="h-16 bg-white gap-4 border-b border-slate-200 flex items-center justify-between px-8 z-10">
           <div class="flex items-center gap-4 flex-1">
             <div class="relative w-full max-w-md hidden md:block">
               <mat-icon class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</mat-icon>
@@ -96,13 +96,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
           </div>
 
           <div class="flex items-center gap-2">
-            <button mat-icon-button class="text-slate-500 hover:bg-slate-100 rounded-xl" matTooltip="Notifications">
-              <mat-icon>notifications_none</mat-icon>
-            </button>
-            <button mat-icon-button class="text-slate-500 hover:bg-slate-100 rounded-xl" matTooltip="Help">
-              <mat-icon>help_outline</mat-icon>
-            </button>
-            <div class="h-6 w-px bg-slate-200 mx-2"></div>
             <button mat-flat-button color="primary" class="rounded-xl px-4 py-2 font-bold shadow-sm shadow-blue-200">
               <mat-icon class="mr-1">add</mat-icon>
               Create New PO
