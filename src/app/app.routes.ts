@@ -39,6 +39,14 @@ export const routes: Routes = [
         loadComponent: () => import('./features/purchase-orders/po-list/po-list.component').then(m => m.POListComponent)
       },
       {
+        path: 'purchase-orders/create',
+        loadComponent: () => import('./features/purchase-orders/po-form/po-form.component').then(m => m.POFormComponent)
+      },
+      {
+        path: 'purchase-orders/edit/:id',
+        loadComponent: () => import('./features/purchase-orders/po-form/po-form.component').then(m => m.POFormComponent)
+      },
+      {
         path: 'settings',
         loadComponent: () => import('./features/settings/settings.component').then(m => m.SettingsComponent)
       }

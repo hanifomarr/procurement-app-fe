@@ -106,7 +106,8 @@ import { AuthService } from '../../services/auth.service';
           </div>
 
           <div class="flex items-center gap-2">
-            <button mat-flat-button color="primary" class="rounded-xl px-4 py-2 font-bold shadow-sm shadow-blue-200">
+            <button mat-flat-button color="primary" routerLink="/purchase-orders/create"
+                    class="rounded-xl px-4 py-2 font-bold shadow-sm shadow-blue-200">
               <mat-icon class="mr-1">add</mat-icon>
               Create New PO
             </button>
