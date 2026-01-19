@@ -23,11 +23,11 @@ export class SupplierService {
     return this.http.post<Supplier>(this.apiUrl, supplier);
   }
 
-  updateSupplier(id: number, supplier: Partial<Supplier>): Observable<Supplier> {
+  updateSupplier(id: string, supplier: Partial<Supplier>): Observable<Supplier> {
     return this.http.put<Supplier>(`${this.apiUrl}/${id}`, supplier);
   }
 
-  deleteSupplier(id: number): Observable<void> {
+  deleteSupplier(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }

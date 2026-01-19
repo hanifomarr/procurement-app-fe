@@ -184,7 +184,7 @@ export class SupplierListComponent implements OnInit {
     });
   }
 
-  private updateSupplier(id: number, data: Partial<Supplier>) {
+  private updateSupplier(id: string, data: Partial<Supplier>) {
     this.supplierService.updateSupplier(id, data).subscribe({
       next: () => {
         this.loadSuppliers();
