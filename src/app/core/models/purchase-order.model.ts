@@ -12,7 +12,7 @@ export interface PurchaseOrderItem {
 }
 
 export interface PurchaseOrder {
-  id: number;
+  id: string;
   poNumber: string;
   status: POStatus;
   totalAmount: number;
