@@ -1,9 +1,12 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, ViewChild, ElementRef, effect, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { DashboardService } from './services/dashboard.service';
 import { DashboardStats } from '../../core/models/dashboard.model';
+import { Chart, registerables } from 'chart.js';
+
+Chart.register(...registerables);
 
 @Component({
   selector: 'app-dashboard',
@@ -120,30 +123,24 @@ import { DashboardStats } from '../../core/models/dashboard.model';
           </div>
         </mat-card>
 
-        <!-- Supplier Analysis -->
+        <!-- Supplier Analysis Chart -->
         <mat-card class="p-8 border-none shadow-sm bg-white rounded-3xl">
-          <h2 class="text-xl font-black text-slate-800 mb-6">Supplier Analysis</h2>
-          <div class="space-y-5">
-            <div *ngFor="let stat of stats()?.supplierStats" class="p-4 bg-slate-50/50 rounded-2xl border border-slate-100/50">
-              <div class="flex justify-between items-center mb-3">
-                <div class="flex items-center gap-2">
-                  <div class="w-2 h-2 rounded-full bg-blue-500"></div>
-                  <span class="font-bold text-slate-700">{{ stat.supplierName }}</span>
-                </div>
-                <span class="text-xs font-black text-slate-400 uppercase tracking-tighter">{{ stat.totalOrders }} Orders</span>
-              </div>
-              <div class="flex items-center justify-between gap-4">
-                <div class="flex-1 bg-white h-2 rounded-full overflow-hidden border border-slate-100">
-                  <div class="bg-blue-600 h-full rounded-full transition-all duration-1000" 
-                       [style.width.%]="(stat.totalSpent / (stats()?.totalSpent || 1)) * 100"></div>
-                </div>
-                <span class="text-sm font-black text-slate-900 whitespace-nowrap">{{ stat.totalSpent | currency:'RM':'symbol':'1.0-0' }}</span>
-              </div>
-            </div>
-
-            <div *ngIf="!stats()?.supplierStats?.length" class="flex flex-col items-center justify-center min-h-[200px] border-2 border-dashed border-slate-100 rounded-3xl bg-slate-50/50">
+          <h2 class="text-xl font-black text-slate-800 mb-6">Supplier Expenditure Share</h2>
+          <div class="relative h-[300px] flex items-center justify-center">
+            <canvas #supplierChart></canvas>
+            <div *ngIf="!stats()?.supplierStats?.length" class="absolute inset-0 flex flex-col items-center justify-center border-2 border-dashed border-slate-100 rounded-3xl bg-slate-50/50">
               <mat-icon class="text-5xl text-slate-200 mb-4">insights</mat-icon>
               <p class="text-slate-400 font-bold">No supplier data available</p>
+            </div>
+          </div>
+          
+          <div class="mt-8 grid grid-cols-2 gap-4">
+            <div *ngFor="let stat of stats()?.supplierStats; let i = index" class="flex items-center gap-3">
+              <div class="w-3 h-3 rounded-full" [style.backgroundColor]="chartColors[i % chartColors.length]"></div>
+              <div>
+                <p class="text-xs font-bold text-slate-700 truncate w-24">{{ stat.supplierName }}</p>
+                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">{{ stat.totalSpent | currency:'RM':'symbol':'1.0-0' }}</p>
+              </div>
             </div>
           </div>
         </mat-card>
@@ -156,16 +153,102 @@ import { DashboardStats } from '../../core/models/dashboard.model';
       background-color: #f8fafc;
       min-height: 100%;
     }
+    canvas {
+      max-width: 100%;
+      max-height: 100%;
+    }
   `]
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, AfterViewInit {
   private dashboardService = inject(DashboardService);
+  
+  @ViewChild('supplierChart') supplierChartRef!: ElementRef<HTMLCanvasElement>;
+  
   stats = signal<DashboardStats | null>(null);
+  chart: Chart | null = null;
+  
+  chartColors = [
+    '#3b82f6', // blue-500
+    '#8b5cf6', // purple-500
+    '#ec4899', // pink-500
+    '#f59e0b', // amber-500
+    '#10b981', // emerald-500
+    '#6366f1', // indigo-500
+    '#f43f5e'  // rose-500
+  ];
+
+  constructor() {
+    // Update chart whenever stats change
+    effect(() => {
+      const data = this.stats();
+      if (data && this.supplierChartRef) {
+        this.updateChart(data);
+      }
+    });
+  }
 
   ngOnInit() {
     this.dashboardService.getStats().subscribe({
       next: (data) => this.stats.set(data),
       error: (err) => console.error('Error fetching dashboard stats:', err)
+    });
+  }
+
+  ngAfterViewInit() {
+    const data = this.stats();
+    if (data) {
+      this.updateChart(data);
+    }
+  }
+
+  private updateChart(data: DashboardStats) {
+    if (!this.supplierChartRef) return;
+
+    const ctx = this.supplierChartRef.nativeElement.getContext('2d');
+    if (!ctx) return;
+
+    if (this.chart) {
+      this.chart.destroy();
+    }
+
+    const labels = data.supplierStats.map(s => s.supplierName);
+    const values = data.supplierStats.map(s => s.totalSpent);
+
+    this.chart = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: labels,
+        datasets: [{
+          data: values,
+          backgroundColor: this.chartColors,
+          borderWidth: 0,
+          hoverOffset: 15
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            backgroundColor: '#1e293b',
+            titleFont: { family: 'Inter', size: 14, weight: 'bold' },
+            bodyFont: { family: 'Inter', size: 12 },
+            padding: 12,
+            cornerRadius: 12,
+            displayColors: true,
+            callbacks: {
+              label: (item) => {
+                const val = item.raw as number;
+                return ` RM ${val.toLocaleString()}`;
+              }
+            }
+          }
+        },
+        cutout: '75%'
+      }
     });
   }
 }
