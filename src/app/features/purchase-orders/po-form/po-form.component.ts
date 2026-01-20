@@ -32,36 +32,36 @@ import { POStatus, PurchaseOrder } from '../../../core/models/purchase-order.mod
     MatSnackBarModule
   ],
   template: `
-    <div class="p-6 max-w-5xl mx-auto font-sans">
-      <header class="flex items-center gap-4 mb-8">
+    <div class="p-3 sm:p-6 max-w-5xl mx-auto font-sans">
+      <header class="flex items-center gap-2 sm:gap-4 mb-6 sm:mb-8">
         <button mat-icon-button routerLink="/purchase-orders" class="text-slate-500">
           <mat-icon>arrow_back</mat-icon>
         </button>
         <div>
-          <h1 class="text-3xl font-bold text-slate-800 tracking-tight">
-            {{ isEditMode() ? 'Edit Purchase Order' : 'Create New Purchase Order' }}
+          <h1 class="text-2xl sm:text-3xl font-bold text-slate-800 tracking-tight">
+            {{ isEditMode() ? 'Edit PO' : 'New PO' }}
           </h1>
-          <p class="text-slate-500">Fill in the details to {{ isEditMode() ? 'update' : 'generate' }} a procurement order.</p>
+          <p class="text-xs sm:text-sm text-slate-500">Manage your procurement order details.</p>
         </div>
       </header>
-
-      <form [formGroup]="poForm" (ngSubmit)="onSubmit()" class="space-y-8">
+ 
+      <form [formGroup]="poForm" (ngSubmit)="onSubmit()" class="space-y-6 sm:space-y-8">
         <!-- Main Details Card -->
-        <mat-card class="p-8 border-none shadow-sm rounded-3xl bg-white">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <mat-card class="p-4 sm:p-8 border-none shadow-sm rounded-2xl sm:rounded-3xl bg-white">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-8">
             <div class="space-y-1">
               <label class="text-sm font-semibold text-slate-700 ml-1">Supplier</label>
               <mat-form-field appearance="outline" class="w-full">
                 <mat-icon matPrefix class="text-slate-400 mr-2">business</mat-icon>
-                <mat-select formControlName="supplierId" placeholder="Select a vendor">
+                <mat-select formControlName="supplierId" placeholder="Select vendor">
                   <mat-option *ngFor="let supplier of suppliers()" [value]="supplier.id">
                     {{ supplier.name }}
                   </mat-option>
                 </mat-select>
-                <mat-error *ngIf="poForm.get('supplierId')?.hasError('required')">Supplier is required</mat-error>
+                <mat-error *ngIf="poForm.get('supplierId')?.hasError('required')">Required</mat-error>
               </mat-form-field>
             </div>
-
+ 
             <div class="space-y-1">
               <label class="text-sm font-semibold text-slate-700 ml-1">Status</label>
               <mat-form-field appearance="outline" class="w-full">
@@ -74,56 +74,56 @@ import { POStatus, PurchaseOrder } from '../../../core/models/purchase-order.mod
             </div>
           </div>
         </mat-card>
-
+ 
         <!-- Items Card -->
-        <mat-card class="p-8 border-none shadow-sm rounded-3xl bg-white">
-          <div class="flex items-center justify-between mb-6">
-            <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+        <mat-card class="p-4 sm:p-8 border-none shadow-sm rounded-2xl sm:rounded-3xl bg-white">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+            <h2 class="text-lg sm:text-xl font-bold text-slate-800 flex items-center gap-2">
               <mat-icon class="text-blue-500">list_alt</mat-icon>
               Order Items
             </h2>
-            <button type="button" mat-stroked-button color="primary" (click)="addItem()" class="rounded-xl font-bold border-2">
+            <button type="button" mat-stroked-button color="primary" (click)="addItem()" 
+                    class="w-full sm:w-auto rounded-xl font-bold border-2">
               <mat-icon class="mr-1">add</mat-icon>
               Add Item
             </button>
           </div>
-
+ 
           <div formArrayName="items" class="space-y-4">
             <div *ngFor="let item of items.controls; let i = index" [formGroupName]="i" 
-                 class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end bg-slate-50/50 p-4 rounded-2xl border border-slate-100">
+                 class="grid grid-cols-1 md:grid-cols-12 gap-3 sm:gap-4 items-end bg-slate-50/50 p-4 sm:p-6 rounded-2xl border border-slate-100">
               
               <div class="md:col-span-5 space-y-1">
-                <label class="text-xs font-bold text-slate-500 ml-1">Product Name</label>
+                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider ml-1">Product Name</label>
                 <mat-form-field appearance="outline" class="w-full dense-field">
-                  <input matInput formControlName="productName" placeholder="Item description">
-                  <mat-error *ngIf="item.get('productName')?.hasError('required')">Required</mat-error>
+                  <input matInput formControlName="productName" placeholder="What are you buying?">
                 </mat-form-field>
               </div>
-
-              <div class="md:col-span-2 space-y-1">
-                <label class="text-xs font-bold text-slate-500 ml-1">Qty</label>
-                <mat-form-field appearance="outline" class="w-full dense-field">
-                  <input matInput type="number" formControlName="quantity" min="1" (change)="calculateTotal()">
-                  <mat-error *ngIf="item.get('quantity')?.hasError('required')">Required</mat-error>
-                </mat-form-field>
+ 
+              <div class="flex gap-3 md:col-span-4">
+                <div class="flex-1 space-y-1">
+                  <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider ml-1">Qty</label>
+                  <mat-form-field appearance="outline" class="w-full dense-field">
+                    <input matInput type="number" formControlName="quantity" min="1" (change)="calculateTotal()">
+                  </mat-form-field>
+                </div>
+ 
+                <div class="flex-[2] space-y-1">
+                  <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider ml-1">Price</label>
+                  <mat-form-field appearance="outline" class="w-full dense-field">
+                    <span matPrefix class="text-slate-400 mr-1 text-xs">RM</span>
+                    <input matInput type="number" formControlName="unitPrice" min="0" step="0.01" (change)="calculateTotal()">
+                  </mat-form-field>
+                </div>
               </div>
-
+ 
               <div class="md:col-span-2 space-y-1">
-                <label class="text-xs font-bold text-slate-500 ml-1">Price</label>
-                <mat-form-field appearance="outline" class="w-full dense-field">
-                  <span matPrefix class="text-slate-400 mr-1">RM</span>
-                  <input matInput type="number" formControlName="unitPrice" min="0" step="0.01" (change)="calculateTotal()">
-                  <mat-error *ngIf="item.get('unitPrice')?.hasError('required')">Required</mat-error>
-                </mat-form-field>
-              </div>
-
-              <div class="md:col-span-2 space-y-1">
-                <label class="text-xs font-bold text-slate-500 ml-1 text-right block pr-2">Subtotal</label>
-                <div class="h-[48px] flex items-center justify-end font-bold text-slate-700 pr-2">
+                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider ml-1 md:text-right block md:pr-2">Subtotal</label>
+                <div class="h-[48px] flex items-center md:justify-end font-bold text-slate-700 md:pr-2">
                   {{ (item.get('lineTotal')?.value || 0) | currency:'RM':'symbol':'1.2-2' }}
                 </div>
               </div>
-
+ 
               <div class="md:col-span-1 flex justify-end">
                 <button type="button" mat-icon-button color="warn" (click)="removeItem(i)" 
                         [disabled]="items.length === 1" class="mb-1">
@@ -137,11 +137,11 @@ import { POStatus, PurchaseOrder } from '../../../core/models/purchase-order.mod
               <p class="text-slate-500">No items added. Click "Add Item" to start.</p>
             </div>
           </div>
-
+ 
           <div class="mt-8 pt-6 border-t border-slate-100 flex justify-end">
             <div class="text-right">
-              <p class="text-slate-500 text-sm font-bold uppercase tracking-wider mb-1">Total Amount</p>
-              <h3 class="text-4xl font-black text-slate-900">{{ poForm.get('totalAmount')?.value | currency:'RM':'symbol':'1.2-2' }}</h3>
+              <p class="text-slate-500 text-[10px] font-bold uppercase tracking-widest mb-1">Total Amount</p>
+              <h3 class="text-3xl sm:text-4xl font-black text-slate-900 line-clamp-1">{{ poForm.get('totalAmount')?.value | currency:'RM':'symbol':'1.2-2' }}</h3>
             </div>
           </div>
         </mat-card>

@@ -24,30 +24,29 @@ import { AuthService } from '../../../core/services/auth.service';
     MatSnackBarModule
   ],
   template: `
-    <div class="min-h-screen flex items-center justify-center bg-slate-50 p-4 font-sans">
-      <div class="w-full max-w-md">
+    <div class="min-h-screen flex items-center justify-center bg-slate-50 p-4 sm:p-6 font-sans">
+      <div class="w-full max-w-[400px]">
         <!-- Logo/Header -->
-        <div class="text-center mb-8">
-          <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-2xl text-white shadow-lg shadow-blue-200 mb-4 animate-bounce">
-            <mat-icon class="text-3xl">shopping_basket</mat-icon>
+        <div class="text-center mb-6 sm:mb-8">
+          <div class="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-blue-600 rounded-2xl text-white shadow-lg shadow-blue-200 mb-4 animate-pulse">
+            <mat-icon class="text-2xl sm:text-3xl">shopping_basket</mat-icon>
           </div>
-          <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Welcome Back</h1>
-          <p class="text-slate-500 mt-2">Log in to manage your procurement flow.</p>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Welcome Back</h1>
+          <p class="text-slate-500 mt-1 sm:mt-2 text-sm sm:text-base">Sign in to nProcurement Procurement</p>
         </div>
-
+ 
         <!-- Login Card -->
-        <div class="bg-white p-8 rounded-3xl shadow-xl shadow-slate-200 border border-slate-100">
-          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-xl shadow-slate-200 border border-slate-100">
+          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-4 sm:space-y-6">
             <div class="space-y-1">
               <label class="text-sm font-semibold text-slate-700 ml-1">Email Address</label>
               <mat-form-field appearance="outline" class="w-full">
                 <mat-icon matPrefix class="text-slate-400 mr-2">email</mat-icon>
                 <input matInput formControlName="email" type="email" placeholder="name@company.com">
-                <mat-error *ngIf="loginForm.get('email')?.hasError('required')">Email is required</mat-error>
-                <mat-error *ngIf="loginForm.get('email')?.hasError('email')">Invalid email address</mat-error>
+                <mat-error *ngIf="loginForm.get('email')?.hasError('required')">Required</mat-error>
               </mat-form-field>
             </div>
-
+ 
             <div class="space-y-1">
               <label class="text-sm font-semibold text-slate-700 ml-1">Password</label>
               <mat-form-field appearance="outline" class="w-full">
@@ -56,32 +55,32 @@ import { AuthService } from '../../../core/services/auth.service';
                 <button type="button" mat-icon-button matSuffix (click)="hidePassword.set(!hidePassword())" class="text-slate-400">
                   <mat-icon>{{hidePassword() ? 'visibility_off' : 'visibility'}}</mat-icon>
                 </button>
-                <mat-error *ngIf="loginForm.get('password')?.hasError('required')">Password is required</mat-error>
+                <mat-error *ngIf="loginForm.get('password')?.hasError('required')">Required</mat-error>
               </mat-form-field>
             </div>
-
+ 
             <button mat-flat-button color="primary" type="submit" 
                     [disabled]="loginForm.invalid || isLoading()"
-                    class="w-full py-6 rounded-2xl font-bold text-lg shadow-lg shadow-blue-200 transition-all">
+                    class="w-full py-6 rounded-2xl font-bold text-base sm:text-lg shadow-lg shadow-blue-200 transition-all">
               <span *ngIf="!isLoading()">Sign In</span>
-              <div *ngIf="isLoading()" class="flex items-center gap-2">
+              <div *ngIf="isLoading()" class="flex items-center justify-center gap-2">
                 <mat-icon class="animate-spin text-sm">refresh</mat-icon>
                 Authenticating...
               </div>
             </button>
           </form>
-
-          <div class="mt-8 text-center">
+ 
+          <div class="mt-6 sm:mt-8 text-center">
             <p class="text-slate-500 text-sm">
-              Don't have an account? 
-              <a routerLink="/auth/register" class="text-blue-600 font-bold hover:underline ml-1">Create one</a>
+              New here? 
+              <a routerLink="/auth/register" class="text-blue-600 font-bold hover:underline ml-1">Create account</a>
             </p>
           </div>
         </div>
-
+ 
         <!-- Footer Info -->
-        <div class="mt-8 text-center text-xs text-slate-400">
-          Built for modern procurement teams. &copy; 2026 ProcureFlow
+        <div class="mt-8 text-center text-[10px] text-slate-400 font-medium uppercase tracking-widest">
+          &copy; 2026 Neurogine
         </div>
       </div>
     </div>

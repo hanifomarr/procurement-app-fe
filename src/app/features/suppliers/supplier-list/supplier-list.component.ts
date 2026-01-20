@@ -29,23 +29,23 @@ import { ConfirmDialogComponent } from '../../../core/components/confirm-dialog/
   ],
   template: `
     <div class="p-6">
-      <header class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+      <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
-          <h1 class="text-3xl font-bold text-slate-800 tracking-tight">Suppliers</h1>
-          <p class="text-slate-500">Manage your vendor relationships and contact details.</p>
+          <h1 class="text-2xl sm:text-3xl font-bold text-slate-800 tracking-tight">Suppliers</h1>
+          <p class="text-sm sm:text-base text-slate-500">Manage your vendor network.</p>
         </div>
         
-        <div class="flex items-center gap-3 w-full md:w-auto">
-          <div class="relative flex-1 md:w-64">
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
+          <div class="relative w-full sm:w-64">
             <mat-icon class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</mat-icon>
             <input type="text" [(ngModel)]="searchQuery" (ngModelChange)="onSearch($event)" 
-                   placeholder="Search suppliers..." 
-                   class="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all shadow-sm">
+                   placeholder="Search..." 
+                   class="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none shadow-sm">
           </div>
           <button mat-flat-button color="primary" (click)="openSupplierDialog()" 
-                  class="rounded-xl px-6 py-6 font-bold shadow-lg shadow-blue-100 whitespace-nowrap">
-            <mat-icon class="mr-2">add</mat-icon>
-            Add Supplier
+                  class="rounded-xl px-4 py-6 font-bold shadow-lg shadow-blue-100 flex items-center justify-center">
+            <mat-icon class="sm:mr-2">add</mat-icon>
+            <span class="sm:inline">Add Supplier</span>
           </button>
         </div>
       </header>
@@ -55,48 +55,50 @@ import { ConfirmDialogComponent } from '../../../core/components/confirm-dialog/
           <table mat-table [dataSource]="filteredSuppliers()" class="w-full">
             <!-- Name Column -->
             <ng-container matColumnDef="name">
-              <th mat-header-cell *matHeaderCellDef class="bg-slate-50/50 text-slate-600 font-bold py-4 px-6 border-b border-slate-100"> Supplier Name </th>
-              <td mat-cell *matCellDef="let supplier" class="py-4 px-6 font-semibold text-slate-800"> {{supplier.name}} </td>
+              <th mat-header-cell *matHeaderCellDef class="bg-slate-50/50 text-slate-600 font-bold py-4 px-4 sm:px-6 border-b border-slate-100"> Name </th>
+              <td mat-cell *matCellDef="let supplier" class="py-4 px-4 sm:px-6 font-semibold text-slate-800"> {{supplier.name}} </td>
             </ng-container>
-
+ 
             <!-- Email Column -->
             <ng-container matColumnDef="email">
-              <th mat-header-cell *matHeaderCellDef class="bg-slate-50/50 text-slate-600 font-bold border-b border-slate-100"> Contact Email </th>
-              <td mat-cell *matCellDef="let supplier" class="text-slate-600"> 
+              <th mat-header-cell *matHeaderCellDef class="bg-slate-50/50 text-slate-600 font-bold border-b border-slate-100 hidden sm:table-cell"> Email </th>
+              <td mat-cell *matCellDef="let supplier" class="text-slate-600 hidden sm:table-cell"> 
                 <div class="flex items-center gap-2">
                   <mat-icon class="text-slate-300 text-sm">email</mat-icon>
-                  {{supplier.contactEmail}} 
+                  <span class="truncate max-w-[150px] lg:max-w-none">{{supplier.contactEmail}}</span>
                 </div>
               </td>
             </ng-container>
-
+ 
             <!-- Phone Column -->
             <ng-container matColumnDef="phone">
-              <th mat-header-cell *matHeaderCellDef class="bg-slate-50/50 text-slate-600 font-bold border-b border-slate-100"> Phone </th>
-              <td mat-cell *matCellDef="let supplier" class="text-slate-600"> {{supplier.phone}} </td>
+              <th mat-header-cell *matHeaderCellDef class="bg-slate-50/50 text-slate-600 font-bold border-b border-slate-100 hidden md:table-cell"> Phone </th>
+              <td mat-cell *matCellDef="let supplier" class="text-slate-600 hidden md:table-cell"> {{supplier.phone}} </td>
             </ng-container>
-
+ 
             <!-- Address Column -->
             <ng-container matColumnDef="address">
               <th mat-header-cell *matHeaderCellDef class="bg-slate-50/50 text-slate-600 font-bold border-b border-slate-100 hidden lg:table-cell"> Address </th>
               <td mat-cell *matCellDef="let supplier" class="text-slate-500 text-sm hidden lg:table-cell max-w-xs truncate"> {{supplier.address}} </td>
             </ng-container>
-
+ 
             <!-- Actions Column -->
             <ng-container matColumnDef="actions">
-              <th mat-header-cell *matHeaderCellDef class="bg-slate-50/50 text-slate-600 font-bold text-right px-6 border-b border-slate-100"> Actions </th>
-              <td mat-cell *matCellDef="let supplier" class="text-right px-6">
-                <button mat-icon-button (click)="openSupplierDialog(supplier)" 
-                        class="text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors" matTooltip="Edit Supplier">
-                  <mat-icon>edit</mat-icon>
-                </button>
-                <button mat-icon-button (click)="deleteSupplier(supplier)" 
-                        class="text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors" matTooltip="Delete Supplier">
-                  <mat-icon>delete_outline</mat-icon>
-                </button>
+              <th mat-header-cell *matHeaderCellDef class="bg-slate-50/50 text-slate-600 font-bold text-right px-4 sm:px-6 border-b border-slate-100"> Actions </th>
+              <td mat-cell *matCellDef="let supplier" class="text-right px-4 sm:px-6">
+                <div class="flex justify-end gap-1">
+                  <button mat-icon-button (click)="openSupplierDialog(supplier)" 
+                          class="p-0 text-slate-400 hover:text-blue-600 transition-colors" matTooltip="Edit">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button mat-icon-button (click)="deleteSupplier(supplier)" 
+                          class="p-0 text-slate-400 hover:text-red-600 transition-colors" matTooltip="Delete">
+                    <mat-icon>delete_outline</mat-icon>
+                  </button>
+                </div>
               </td>
             </ng-container>
-
+ 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="hover:bg-slate-50/80 transition-colors"></tr>
           </table>
