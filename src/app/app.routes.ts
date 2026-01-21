@@ -1,10 +1,25 @@
 import { Routes } from '@angular/router';
 import { MainLayoutComponent } from './core/layouts/main-layout/main-layout.component';
+import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   {
+    path: 'auth',
+    children: [
+      {
+        path: 'login',
+        loadComponent: () => import('./features/auth/login/login.component').then(m => m.LoginComponent)
+      },
+      {
+        path: 'register',
+        loadComponent: () => import('./features/auth/register/register.component').then(m => m.RegisterComponent)
+      }
+    ]
+  },
+  {
     path: '',
     component: MainLayoutComponent,
+    canActivate: [authGuard],
     children: [
       {
         path: '',
@@ -22,6 +37,18 @@ export const routes: Routes = [
       {
         path: 'purchase-orders',
         loadComponent: () => import('./features/purchase-orders/po-list/po-list.component').then(m => m.POListComponent)
+      },
+      {
+        path: 'purchase-orders/create',
+        loadComponent: () => import('./features/purchase-orders/po-form/po-form.component').then(m => m.POFormComponent)
+      },
+      {
+        path: 'purchase-orders/edit/:id',
+        loadComponent: () => import('./features/purchase-orders/po-form/po-form.component').then(m => m.POFormComponent)
+      },
+      {
+        path: 'purchase-orders/:id',
+        loadComponent: () => import('./features/purchase-orders/po-detail/po-detail.component').then(m => m.PODetailComponent)
       },
       {
         path: 'settings',
