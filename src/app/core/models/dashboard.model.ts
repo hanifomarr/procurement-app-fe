@@ -1,4 +1,5 @@
 export interface RecentPurchaseOrder {
+  id: string;
   poNumber: string;
   supplierName: string;
   totalAmount: number;

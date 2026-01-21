@@ -91,44 +91,45 @@ import { POStatus, PurchaseOrder } from '../../../core/models/purchase-order.mod
  
           <div formArrayName="items" class="space-y-4">
             <div *ngFor="let item of items.controls; let i = index" [formGroupName]="i" 
-                 class="grid grid-cols-1 md:grid-cols-12 gap-3 sm:gap-4 items-end bg-slate-50/50 p-4 sm:p-6 rounded-2xl border border-slate-100">
-              
-              <div class="md:col-span-5 space-y-1">
-                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider ml-1">Product Name</label>
-                <mat-form-field appearance="outline" class="w-full dense-field">
-                  <input matInput formControlName="productName" placeholder="What are you buying?">
-                </mat-form-field>
-              </div>
- 
-              <div class="flex gap-3 md:col-span-4">
-                <div class="flex-1 space-y-1">
-                  <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider ml-1">Qty</label>
+                 class="space-y-4 bg-slate-50/50 p-4 sm:p-6 rounded-3xl border border-slate-100 mb-4 shadow-sm">
+              <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+                <!-- Product Name -->
+                <div class="md:col-span-11 space-y-1">
+                  <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider ml-1">Product Name</label>
                   <mat-form-field appearance="outline" class="w-full dense-field">
-                    <input matInput type="number" formControlName="quantity" min="1" (change)="calculateTotal()">
+                    <input matInput formControlName="productName" placeholder="What are you buying?">
                   </mat-form-field>
                 </div>
- 
-                <div class="flex-[2] space-y-1">
-                  <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider ml-1">Price</label>
-                  <mat-form-field appearance="outline" class="w-full dense-field">
-                    <span matPrefix class="text-slate-400 mr-1 text-xs">RM</span>
-                    <input matInput type="number" formControlName="unitPrice" min="0" step="0.01" (change)="calculateTotal()">
-                  </mat-form-field>
+                <!-- Delete Button -->
+                <div class="md:col-span-1 flex justify-end">
+                  <button type="button" mat-icon-button color="warn" (click)="removeItem(i)" 
+                          [disabled]="items.length === 1" class="mb-1">
+                    <mat-icon>delete_outline</mat-icon>
+                  </button>
+                </div>
+                <!-- Qty & Price -->
+                <div class="md:col-span-12 flex gap-4">
+                  <div class="flex-1 space-y-1">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider ml-1">Qty</label>
+                    <mat-form-field appearance="outline" class="w-full dense-field">
+                      <input matInput type="number" formControlName="quantity" min="1" (change)="calculateTotal()">
+                    </mat-form-field>
+                  </div>
+                  <div class="flex-[2] space-y-1">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider ml-1">Price / Unit</label>
+                    <mat-form-field appearance="outline" class="w-full dense-field">
+                      <span matPrefix class="text-slate-400 mr-1 text-xs">RM</span>
+                      <input matInput type="number" formControlName="unitPrice" min="0" step="0.01" (change)="calculateTotal()">
+                    </mat-form-field>
+                  </div>
                 </div>
               </div>
- 
-              <div class="md:col-span-2 space-y-1">
-                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider ml-1 md:text-right block md:pr-2">Subtotal</label>
-                <div class="h-[48px] flex items-center md:justify-end font-bold text-slate-700 md:pr-2">
+              <!-- Subtotal Row -->
+              <div class="flex items-center justify-between px-4 py-3 bg-white/60 rounded-2xl border border-slate-100">
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Subtotal</span>
+                <span class="text-xl font-black text-blue-600">
                   {{ (item.get('lineTotal')?.value || 0) | currency:'RM':'symbol':'1.2-2' }}
-                </div>
-              </div>
- 
-              <div class="md:col-span-1 flex justify-end">
-                <button type="button" mat-icon-button color="warn" (click)="removeItem(i)" 
-                        [disabled]="items.length === 1" class="mb-1">
-                  <mat-icon>delete_outline</mat-icon>
-                </button>
+                </span>
               </div>
             </div>
 
