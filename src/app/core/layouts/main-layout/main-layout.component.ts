@@ -40,7 +40,9 @@ import { AuthService } from '../../services/auth.service';
             <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white">
               <mat-icon class="text-lg">shopping_basket</mat-icon>
             </div>
-            <span class="text-lg font-bold tracking-tight text-slate-800">nProcurement</span>
+            <a routerLink="/dashboard">
+              <span class="text-lg font-bold tracking-tight text-slate-800 ">nProcurement</span>
+            </a>
           </div>
           <button (click)="toggleSidebar()" class="md:hidden text-slate-400 p-1">
             <mat-icon>close</mat-icon>

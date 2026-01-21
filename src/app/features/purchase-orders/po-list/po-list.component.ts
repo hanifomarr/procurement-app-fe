@@ -77,7 +77,11 @@ import { ConfirmDialogComponent } from '../../../core/components/confirm-dialog/
             <!-- PO Number -->
             <ng-container matColumnDef="poNumber">
               <th mat-header-cell *matHeaderCellDef class="bg-slate-50/50 text-slate-600 font-bold py-4 px-4 sm:px-6 border-b border-slate-100"> Number </th>
-              <td mat-cell *matCellDef="let order" class="py-4 px-4 sm:px-6 font-bold text-blue-600"> {{order.poNumber}} </td>
+              <td mat-cell *matCellDef="let order" class="py-4 px-4 sm:px-6"> 
+                <a [routerLink]="['/purchase-orders', order.id]" class="font-bold text-blue-600 hover:text-blue-800 transition-colors">
+                  {{order.poNumber}}
+                </a>
+              </td>
             </ng-container>
 
             <!-- Supplier -->

@@ -1,9 +1,10 @@
 import { Component, OnInit, inject, signal, ViewChild, ElementRef, effect, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router, RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { DashboardService } from './services/dashboard.service';
-import { DashboardStats } from '../../core/models/dashboard.model';
+import { DashboardStats, RecentPurchaseOrder } from '../../core/models/dashboard.model';
 import { Chart, registerables } from 'chart.js';
 
 Chart.register(...registerables);
@@ -11,7 +12,7 @@ Chart.register(...registerables);
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatIconModule],
+  imports: [CommonModule, MatCardModule, MatIconModule, RouterLink],
   template: `
     <div class="p-6">
       <header class="mb-8">
@@ -93,13 +94,18 @@ Chart.register(...registerables);
           </div>
           <div class="space-y-4">
             <div *ngFor="let po of stats()?.recentPurchaseOrders" 
-                 class="flex items-center justify-between p-4 bg-slate-50/50 hover:bg-slate-50 rounded-2xl transition-all border border-transparent hover:border-slate-100">
+                 (click)="navigateToOrder(po)"
+                 tabindex="0"
+                 role="link"
+                 (keydown.enter)="navigateToOrder(po)"
+                 (keydown.space)="navigateToOrder(po)"
+                 class="flex items-center justify-between p-4 bg-slate-50/50 hover:bg-slate-50 rounded-2xl transition-all border border-transparent hover:border-slate-100 cursor-pointer group/item outline-none focus:ring-2 focus:ring-blue-100">
               <div class="flex items-center gap-4">
                 <div class="w-12 h-12 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-blue-500">
                   <mat-icon>description</mat-icon>
                 </div>
                 <div>
-                  <p class="font-bold text-slate-800">{{ po.poNumber }}</p>
+                  <p class="font-bold text-slate-800 group-hover/item:text-blue-600 transition-colors">{{ po.poNumber }}</p>
                   <p class="text-xs font-bold text-slate-400 tracking-wide uppercase">
                     {{ po.supplierName }} • {{ po.orderDate | date:'mediumDate' }}
                   </p>
@@ -161,6 +167,7 @@ Chart.register(...registerables);
 })
 export class DashboardComponent implements OnInit, AfterViewInit {
   private dashboardService = inject(DashboardService);
+  private router = inject(Router);
   
   @ViewChild('supplierChart') supplierChartRef!: ElementRef<HTMLCanvasElement>;
   
@@ -250,5 +257,15 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         cutout: '75%'
       }
     });
+  }
+ 
+  navigateToOrder(po: RecentPurchaseOrder) {
+    if (po.id) {
+      this.router.navigate(['/purchase-orders', po.id]);
+    } else {
+      console.warn('Purchase Order ID is missing for:', po.poNumber);
+      // Fallback to poNumber if backend supports it OR just navigate to list
+      this.router.navigate(['/purchase-orders']);
+    }
   }
 }
