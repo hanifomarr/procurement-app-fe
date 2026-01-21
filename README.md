@@ -1,59 +1,54 @@
-# ProcurementAppFe
+# 📦 Procurement Management System
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.7.
+A high-fidelity, responsive procurement application. This system streamlines the creation, management, and tracking of Purchase Orders (POs) and Suppliers with a modern and user-friendly interface.
 
-## Development server
+![Dashboard Preview](public/dashboard.png)
+![PO Detail Preview](public/po-detail.png)
 
-To start a local development server, run:
+## Features
 
-```bash
-ng serve
-```
+- **Dashboard**: Real-time visualization of procurement metrics using Chart.js, including expenditure share and order status summaries.
+- **Supplier Management**: Full CRUD operations for vendors with a clean, searchable interface.
+- **Purchase Order Workflow**: 
+  - Interactive PO creation with live subtotal calculations.
+  - Multi-status support (Draft, Submitted).
+  - Itemized order tracking.
+- **Professional Detail View**: A document-style PO details view with built-in **Print to PDF** support, optimized for business records.
+- **Fully Responsive**: Responsive design system ensuring a perfect experience from smartphones to large desktop monitors.
+- **Secure Architecture**: Token-based authentication flow with protected routes and state-management.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Tech Stack
 
-## Code scaffolding
+- **Core**: Angular 19 (Standalone Components, Signals)
+- **Styling**: Tailwind CSS & Vanilla CSS
+- **UI Components**: Angular Material
+- **Data Visualization**: Chart.js
+- **Icons**: Material Icons / Google Symbols
+- **Typography**: Inter & Outfit (Google Fonts)
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Getting Started
 
-```bash
-ng generate component component-name
-```
+### Prerequisites
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+- [Node.js](https://nodejs.org/) (v18.x or higher)
+- [npm](https://www.npmjs.com/) (v9.x or higher)
 
-```bash
-ng generate --help
-```
+### Installation
 
-## Building
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/hanifomarr/procurement-app-fe.git
+   cd procurement-app-fe
+   ```
 
-To build the project run:
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-```bash
-ng build
-```
+3. Start the development server:
+   ```bash
+   npm start
+   ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+4. Open your browser to `http://localhost:4200`
