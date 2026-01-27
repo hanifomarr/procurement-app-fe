@@ -41,59 +41,61 @@ import { ConfirmDialogComponent } from '../../../core/components/confirm-dialog/
           <h1 class="text-2xl sm:text-3xl font-bold text-slate-800 tracking-tight">Purchase Orders</h1>
           <p class="text-sm sm:text-base text-slate-500">Track your procurement history.</p>
         </div>
-        
+    
         <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
           <div class="relative w-full sm:w-64">
             <mat-icon class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</mat-icon>
             <input type="text" [(ngModel)]="searchQuery"
-                   placeholder="Search..." 
-                   class="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all shadow-sm">
+              placeholder="Search..."
+              class="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all shadow-sm">
           </div>
           <button mat-flat-button color="primary" routerLink="/purchase-orders/create"
-                  class="rounded-xl px-4 py-6 font-bold shadow-lg shadow-blue-100 flex items-center justify-center">
+            class="rounded-xl px-4 py-6 font-bold shadow-lg shadow-blue-100 flex items-center justify-center">
             <mat-icon class="sm:mr-2">add</mat-icon>
             <span class="sm:inline">Create PO</span>
           </button>
         </div>
       </header>
-
+    
       <!-- Status Filter Tabs -->
       <div class="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-none">
-        <button *ngFor="let tab of statusTabs" 
-                (click)="activeTab.set(tab.value)"
-                [class]="activeTab() === tab.value ? 'bg-blue-600 text-white shadow-md' : 'bg-white text-slate-600 hover:bg-slate-50'"
-                class="px-5 py-2.5 rounded-full text-sm font-bold transition-all whitespace-nowrap border border-slate-100 flex items-center">
-          {{ tab.label }}
-          <span class="ml-2 px-2 py-0.5 rounded-full text-[10px]" 
-                [class]="activeTab() === tab.value ? 'bg-blue-500 text-white' : 'bg-slate-100 text-slate-500'">
-            {{ getCount(tab.value) }}
-          </span>
-        </button>
+        @for (tab of statusTabs; track tab) {
+          <button
+            (click)="activeTab.set(tab.value)"
+            [class]="activeTab() === tab.value ? 'bg-blue-600 text-white shadow-md' : 'bg-white text-slate-600 hover:bg-slate-50'"
+            class="px-5 py-2.5 rounded-full text-sm font-bold transition-all whitespace-nowrap border border-slate-100 flex items-center">
+            {{ tab.label }}
+            <span class="ml-2 px-2 py-0.5 rounded-full text-[10px]"
+              [class]="activeTab() === tab.value ? 'bg-blue-500 text-white' : 'bg-slate-100 text-slate-500'">
+              {{ getCount(tab.value) }}
+            </span>
+          </button>
+        }
       </div>
-
+    
       <mat-card class="overflow-hidden border-none shadow-sm bg-white rounded-2xl">
         <div class="overflow-x-auto">
           <table mat-table [dataSource]="filteredOrders()" class="w-full">
             <!-- PO Number -->
             <ng-container matColumnDef="poNumber">
               <th mat-header-cell *matHeaderCellDef class="bg-slate-50/50 text-slate-600 font-bold py-4 px-4 sm:px-6 border-b border-slate-100"> Number </th>
-              <td mat-cell *matCellDef="let order" class="py-4 px-4 sm:px-6"> 
+              <td mat-cell *matCellDef="let order" class="py-4 px-4 sm:px-6">
                 <a [routerLink]="['/purchase-orders', order.id]" class="font-bold text-blue-600 hover:text-blue-800 transition-colors">
                   {{order.poNumber}}
                 </a>
               </td>
             </ng-container>
-
+    
             <!-- Supplier -->
             <ng-container matColumnDef="supplier">
               <th mat-header-cell *matHeaderCellDef class="bg-slate-50/50 text-slate-600 font-bold border-b border-slate-100 hidden sm:table-cell"> Supplier </th>
               <td mat-cell *matCellDef="let order" class="text-slate-800 font-medium hidden sm:table-cell"> {{order.supplierName}} </td>
             </ng-container>
-
+    
             <!-- Status -->
             <ng-container matColumnDef="status">
               <th mat-header-cell *matHeaderCellDef class="bg-slate-50/50 text-slate-600 font-bold border-b border-slate-100"> Status </th>
-              <td mat-cell *matCellDef="let order"> 
+              <td mat-cell *matCellDef="let order">
                 <span [ngClass]="{
                   'bg-slate-100 text-slate-600': order.status === POStatus.DRAFT,
                   'bg-blue-100 text-blue-700': order.status === POStatus.SUBMITTED
@@ -102,21 +104,21 @@ import { ConfirmDialogComponent } from '../../../core/components/confirm-dialog/
                 </span>
               </td>
             </ng-container>
-
+    
             <!-- Items -->
             <ng-container matColumnDef="items">
               <th mat-header-cell *matHeaderCellDef class="bg-slate-50/50 text-slate-600 font-bold border-b border-slate-100 hidden md:table-cell"> Items </th>
-              <td mat-cell *matCellDef="let order" class="text-slate-500 hidden md:table-cell"> 
+              <td mat-cell *matCellDef="let order" class="text-slate-500 hidden md:table-cell">
                 {{order.items?.length || 0}} items
               </td>
             </ng-container>
-
+    
             <!-- Amount -->
             <ng-container matColumnDef="amount">
               <th mat-header-cell *matHeaderCellDef class="bg-slate-50/50 text-slate-600 font-bold text-right px-4 sm:px-6 border-b border-slate-100"> Total </th>
               <td mat-cell *matCellDef="let order" class="text-right px-4 sm:px-6 font-black text-slate-900 whitespace-nowrap"> {{order.totalAmount | currency:'RM':'symbol':'1.2-2'}} </td>
             </ng-container>
-
+    
             <!-- Actions -->
             <ng-container matColumnDef="actions">
               <th mat-header-cell *matHeaderCellDef class="bg-slate-50/50 text-slate-600 font-bold text-right px-4 sm:px-6 border-b border-slate-100"></th>
@@ -125,14 +127,18 @@ import { ConfirmDialogComponent } from '../../../core/components/confirm-dialog/
                   <mat-icon>more_vert</mat-icon>
                 </button>
                 <mat-menu #menu="matMenu" class="rounded-2xl shadow-xl border border-slate-100">
-                  <button mat-menu-item *ngIf="order.id" [routerLink]="['/purchase-orders/edit', order.id]">
-                    <mat-icon class="text-blue-500">edit</mat-icon>
-                    <span>Edit Order</span>
-                  </button>
-                  <button mat-menu-item *ngIf="order.status === POStatus.DRAFT" (click)="changeStatus(order, POStatus.SUBMITTED)">
-                    <mat-icon class="text-green-500">send</mat-icon>
-                    <span>Submit PO</span>
-                  </button>
+                  @if (order.id) {
+                    <button mat-menu-item [routerLink]="['/purchase-orders/edit', order.id]">
+                      <mat-icon class="text-blue-500">edit</mat-icon>
+                      <span>Edit Order</span>
+                    </button>
+                  }
+                  @if (order.status === POStatus.DRAFT) {
+                    <button mat-menu-item (click)="changeStatus(order, POStatus.SUBMITTED)">
+                      <mat-icon class="text-green-500">send</mat-icon>
+                      <span>Submit PO</span>
+                    </button>
+                  }
                   <mat-divider></mat-divider>
                   <button mat-menu-item (click)="deleteOrder(order)" class="text-red-600">
                     <mat-icon class="text-red-500">delete_outline</mat-icon>
@@ -141,26 +147,28 @@ import { ConfirmDialogComponent } from '../../../core/components/confirm-dialog/
                 </mat-menu>
               </td>
             </ng-container>
-
+    
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="hover:bg-slate-50/80 transition-colors"></tr>
           </table>
         </div>
-
+    
         <!-- Empty State -->
-        <div *ngIf="filteredOrders().length === 0" class="py-24 text-center">
-          <div class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-300">
-            <mat-icon class="text-4xl">description</mat-icon>
+        @if (filteredOrders().length === 0) {
+          <div class="py-24 text-center">
+            <div class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-300">
+              <mat-icon class="text-4xl">description</mat-icon>
+            </div>
+            <h3 class="text-lg font-bold text-slate-800">No purchase orders found</h3>
+            <p class="text-slate-500 mt-1">Start by creating your first procurement request.</p>
+            <button mat-stroked-button color="primary" class="mt-6 rounded-xl font-bold" routerLink="/purchase-orders/create">
+              Create First PO
+            </button>
           </div>
-          <h3 class="text-lg font-bold text-slate-800">No purchase orders found</h3>
-          <p class="text-slate-500 mt-1">Start by creating your first procurement request.</p>
-          <button mat-stroked-button color="primary" class="mt-6 rounded-xl font-bold" routerLink="/purchase-orders/create">
-            Create First PO
-          </button>
-        </div>
+        }
       </mat-card>
     </div>
-  `,
+    `,
   styles: [`
     :host { display: block; }
     .mat-icon { font-size: 20px; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; }

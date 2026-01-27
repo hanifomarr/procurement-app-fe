@@ -46,25 +46,25 @@ import { Supplier } from '../../../core/models/supplier.model';
             <p class="text-slate-500 text-sm font-medium">Order details and itemization</p>
           </div>
         </div>
-
+    
         <div class="flex items-center gap-2 w-full sm:w-auto">
           <button mat-stroked-button (click)="printPage()" class="flex-1 sm:flex-none py-6 rounded-xl font-bold border-2 text-slate-600">
             <mat-icon class="mr-2">print</mat-icon>
             Print PDF
           </button>
           <button mat-flat-button color="primary" [routerLink]="['/purchase-orders/edit', po()?.id]"
-                  class="flex-1 sm:flex-none py-6 rounded-xl font-bold shadow-xl shadow-blue-100">
+            class="flex-1 sm:flex-none py-6 rounded-xl font-bold shadow-xl shadow-blue-100">
             <mat-icon class="mr-2">edit</mat-icon>
             Edit Order
           </button>
         </div>
       </header>
-
+    
       <!-- Document Content -->
       <mat-card class="bg-white border-none shadow-2xl shadow-slate-200/50 rounded-[2rem] overflow-hidden print:shadow-none print:rounded-none">
         <!-- Document Header Stripes -->
         <div class="h-3 bg-gradient-to-r from-blue-600 via-indigo-500 to-purple-500"></div>
-        
+    
         <div class="p-8 sm:p-12">
           <!-- Logo & Company -->
           <div class="flex flex-col md:flex-row justify-between items-start gap-8 mb-12">
@@ -77,16 +77,16 @@ import { Supplier } from '../../../core/models/supplier.model';
                 <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Procurement System</p>
               </div>
             </div>
-            
+    
             <div class="text-left md:text-right space-y-1">
               <h3 class="text-xl font-black text-slate-900">PURCHASE ORDER</h3>
               <p class="text-slate-500 font-bold tracking-tight">PO #: {{ po()?.poNumber }}</p>
               <p class="text-slate-500 font-medium">Date: {{ po()?.createdAt | date:'fullDate' }}</p>
             </div>
           </div>
-
+    
           <mat-divider class="mb-12 opacity-50"></mat-divider>
-
+    
           <!-- Billing/Supplier Info -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
             <div>
@@ -107,7 +107,7 @@ import { Supplier } from '../../../core/models/supplier.model';
                 </div>
               </div>
             </div>
-
+    
             <div class="md:text-right">
               <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Internal Info</p>
               <div class="space-y-4">
@@ -122,7 +122,7 @@ import { Supplier } from '../../../core/models/supplier.model';
               </div>
             </div>
           </div>
-
+    
           <!-- Items Table -->
           <div class="mb-12 overflow-hidden rounded-2xl border border-slate-100 shadow-sm">
             <table class="w-full text-left border-collapse">
@@ -135,16 +135,18 @@ import { Supplier } from '../../../core/models/supplier.model';
                 </tr>
               </thead>
               <tbody class="divide-y divide-slate-100">
-                <tr *ngFor="let item of po()?.items" class="hover:bg-slate-50/30 transition-colors">
-                  <td class="py-5 px-6 font-bold text-slate-800">{{ item.productName }}</td>
-                  <td class="py-5 px-6 text-center font-bold text-slate-600 bg-slate-50/20">{{ item.quantity }}</td>
-                  <td class="py-5 px-6 text-right font-medium text-slate-600">{{ item.unitPrice | currency:'RM':'symbol':'1.2-2' }}</td>
-                  <td class="py-5 px-6 text-right font-black text-slate-900">{{ item.lineTotal | currency:'RM':'symbol':'1.2-2' }}</td>
-                </tr>
+                @for (item of po()?.items; track item) {
+                  <tr class="hover:bg-slate-50/30 transition-colors">
+                    <td class="py-5 px-6 font-bold text-slate-800">{{ item.productName }}</td>
+                    <td class="py-5 px-6 text-center font-bold text-slate-600 bg-slate-50/20">{{ item.quantity }}</td>
+                    <td class="py-5 px-6 text-right font-medium text-slate-600">{{ item.unitPrice | currency:'RM':'symbol':'1.2-2' }}</td>
+                    <td class="py-5 px-6 text-right font-black text-slate-900">{{ item.lineTotal | currency:'RM':'symbol':'1.2-2' }}</td>
+                  </tr>
+                }
               </tbody>
             </table>
           </div>
-
+    
           <!-- Totals -->
           <div class="flex flex-col items-end gap-3 px-6">
             <div class="flex justify-between w-full max-w-[280px]">
@@ -161,14 +163,14 @@ import { Supplier } from '../../../core/models/supplier.model';
               <span class="text-3xl font-black text-blue-600">{{ po()?.totalAmount | currency:'RM':'symbol':'1.2-2' }}</span>
             </div>
           </div>
-
+    
           <!-- Footer/Notes -->
           <div class="mt-20 border-t-2 border-dashed border-slate-100 pt-8">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
               <div>
                 <h5 class="text-sm font-black text-slate-900 uppercase tracking-widest mb-3">Notes & Instructions</h5>
                 <p class="text-slate-500 text-sm leading-relaxed">
-                  Please include the Purchase Order number on all invoices and shipping documents. 
+                  Please include the Purchase Order number on all invoices and shipping documents.
                   Goods are subject to inspection upon delivery. Payment terms: Net 30 days.
                 </p>
               </div>
@@ -180,12 +182,12 @@ import { Supplier } from '../../../core/models/supplier.model';
           </div>
         </div>
       </mat-card>
-
+    
       <div class="mt-8 text-center text-[10px] text-slate-400 font-medium uppercase tracking-widest print:hidden">
         This is a computer generated document. No signature required.
       </div>
     </div>
-  `,
+    `,
   styles: [`
     :host {
       display: block;

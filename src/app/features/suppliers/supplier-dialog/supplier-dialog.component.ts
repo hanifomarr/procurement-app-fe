@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
@@ -12,14 +12,13 @@ import { Supplier } from '../../../core/models/supplier.model';
   selector: 'app-supplier-dialog',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     MatDialogModule,
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
     MatIconModule
-  ],
+],
   template: `
     <div class="p-6 max-w-lg font-sans">
       <div class="flex items-center justify-between mb-8">
@@ -30,57 +29,67 @@ import { Supplier } from '../../../core/models/supplier.model';
           <mat-icon>close</mat-icon>
         </button>
       </div>
-
+    
       <form [formGroup]="supplierForm" (ngSubmit)="onSave()" class="space-y-6">
         <div class="space-y-1">
           <label class="text-sm font-semibold text-slate-700 ml-1">Supplier Name</label>
           <mat-form-field appearance="outline" class="w-full">
             <mat-icon matPrefix class="text-slate-400 mr-2">business</mat-icon>
             <input matInput formControlName="name" placeholder="Example Name">
-            <mat-error *ngIf="supplierForm.get('name')?.hasError('required')">Name is required</mat-error>
+            @if (supplierForm.get('name')?.hasError('required')) {
+              <mat-error>Name is required</mat-error>
+            }
           </mat-form-field>
         </div>
-
+    
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="space-y-1">
             <label class="text-sm font-semibold text-slate-700 ml-1">Email</label>
             <mat-form-field appearance="outline" class="w-full">
               <mat-icon matPrefix class="text-slate-400 mr-2">email</mat-icon>
               <input matInput formControlName="contactEmail" type="email" placeholder="example@example.com">
-              <mat-error *ngIf="supplierForm.get('contactEmail')?.hasError('required')">Email is required</mat-error>
-              <mat-error *ngIf="supplierForm.get('contactEmail')?.hasError('email')">Invalid email</mat-error>
+              @if (supplierForm.get('contactEmail')?.hasError('required')) {
+                <mat-error>Email is required</mat-error>
+              }
+              @if (supplierForm.get('contactEmail')?.hasError('email')) {
+                <mat-error>Invalid email</mat-error>
+              }
             </mat-form-field>
           </div>
-
+    
           <div class="space-y-1">
             <label class="text-sm font-semibold text-slate-700 ml-1">Phone</label>
             <mat-form-field appearance="outline" class="w-full">
               <mat-icon matPrefix class="text-slate-400 mr-2">phone</mat-icon>
               <input matInput formControlName="phone" placeholder="+60 123456789">
-              <mat-error *ngIf="supplierForm.get('phone')?.hasError('required')">Phone is required</mat-error>
+              @if (supplierForm.get('phone')?.hasError('required')) {
+                <mat-error>Phone is required</mat-error>
+              }
             </mat-form-field>
           </div>
         </div>
-
+    
         <div class="space-y-1">
           <label class="text-sm font-semibold text-slate-700 ml-1">Address</label>
           <mat-form-field appearance="outline" class="w-full">
             <mat-icon matPrefix class="text-slate-400 mr-2">location_on</mat-icon>
             <textarea matInput formControlName="address" rows="3" placeholder="123 Street, City, State"></textarea>
-            <mat-error *ngIf="supplierForm.get('address')?.hasError('required')">Address is required</mat-error>
+            @if (supplierForm.get('address')?.hasError('required')) {
+              <mat-error>Address is required</mat-error>
+            }
           </mat-form-field>
         </div>
-
+    
         <div mat-dialog-actions class="flex justify-end gap-3 pt-4 border-t border-slate-100 mt-8">
           <button mat-button (click)="onCancel()" class="px-6 rounded-xl font-bold">Cancel</button>
-          <button mat-flat-button color="primary" type="submit" [disabled]="supplierForm.invalid" 
-                  class="px-8 py-6 rounded-xl font-bold shadow-lg shadow-blue-100">
+          <button mat-flat-button color="primary" type="submit" [disabled]="supplierForm.invalid"
+            class="px-8 py-6 rounded-xl font-bold shadow-lg shadow-blue-100">
             {{ data ? 'Update Supplier' : 'Add Supplier' }}
           </button>
         </div>
       </form>
     </div>
-  `,
+    `,
   styles: [`
     :host { display: block; }
     ::ng-deep .mat-mdc-dialog-container .mdc-dialog__surface { border-radius: 24px !important; }

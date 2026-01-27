@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -13,7 +13,6 @@ import { AuthService } from '../../../core/services/auth.service';
   selector: 'app-register',
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     RouterLink,
@@ -22,7 +21,7 @@ import { AuthService } from '../../../core/services/auth.service';
     MatInputModule,
     MatIconModule,
     MatSnackBarModule
-  ],
+],
   template: `
     <div class="min-h-screen flex items-center justify-center bg-slate-50 p-4 sm:p-6 font-sans">
       <div class="w-full max-w-[420px]">
@@ -34,7 +33,7 @@ import { AuthService } from '../../../core/services/auth.service';
           <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Create Account</h1>
           <p class="text-slate-500 mt-1 sm:mt-2 text-sm sm:text-base">Join nProcurement Procurement today</p>
         </div>
- 
+    
         <!-- Register Card -->
         <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-xl shadow-slate-200 border border-slate-100">
           <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-4 sm:space-y-6">
@@ -43,19 +42,23 @@ import { AuthService } from '../../../core/services/auth.service';
               <mat-form-field appearance="outline" class="w-full">
                 <mat-icon matPrefix class="text-slate-400 mr-2">person</mat-icon>
                 <input matInput formControlName="name" placeholder="Enter your full name">
-                <mat-error *ngIf="registerForm.get('name')?.hasError('required')">Required</mat-error>
+                @if (registerForm.get('name')?.hasError('required')) {
+                  <mat-error>Required</mat-error>
+                }
               </mat-form-field>
             </div>
- 
+    
             <div class="space-y-1">
               <label class="text-sm font-semibold text-slate-700 ml-1">Email Address</label>
               <mat-form-field appearance="outline" class="w-full">
                 <mat-icon matPrefix class="text-slate-400 mr-2">email</mat-icon>
                 <input matInput formControlName="email" type="email" placeholder="name@company.com">
-                <mat-error *ngIf="registerForm.get('email')?.hasError('required')">Required</mat-error>
+                @if (registerForm.get('email')?.hasError('required')) {
+                  <mat-error>Required</mat-error>
+                }
               </mat-form-field>
             </div>
- 
+    
             <div class="space-y-1">
               <label class="text-sm font-semibold text-slate-700 ml-1">Password</label>
               <mat-form-field appearance="outline" class="w-full">
@@ -64,36 +67,42 @@ import { AuthService } from '../../../core/services/auth.service';
                 <button type="button" mat-icon-button matSuffix (click)="hidePassword.set(!hidePassword())" class="text-slate-400">
                   <mat-icon>{{hidePassword() ? 'visibility_off' : 'visibility'}}</mat-icon>
                 </button>
-                <mat-error *ngIf="registerForm.get('password')?.hasError('required')">Required</mat-error>
+                @if (registerForm.get('password')?.hasError('required')) {
+                  <mat-error>Required</mat-error>
+                }
               </mat-form-field>
             </div>
- 
-            <button mat-flat-button color="primary" type="submit" 
-                    [disabled]="registerForm.invalid || isLoading()"
-                    class="w-full py-6 rounded-2xl font-bold text-base sm:text-lg shadow-lg shadow-blue-200 transition-all">
-              <span *ngIf="!isLoading()">Sign Up</span>
-              <div *ngIf="isLoading()" class="flex items-center justify-center gap-2">
-                <mat-icon class="animate-spin text-sm">refresh</mat-icon>
-                Creating account...
-              </div>
+    
+            <button mat-flat-button color="primary" type="submit"
+              [disabled]="registerForm.invalid || isLoading()"
+              class="w-full py-6 rounded-2xl font-bold text-base sm:text-lg shadow-lg shadow-blue-200 transition-all">
+              @if (!isLoading()) {
+                <span>Sign Up</span>
+              }
+              @if (isLoading()) {
+                <div class="flex items-center justify-center gap-2">
+                  <mat-icon class="animate-spin text-sm">refresh</mat-icon>
+                  Creating account...
+                </div>
+              }
             </button>
           </form>
- 
+    
           <div class="mt-6 sm:mt-8 text-center">
             <p class="text-slate-500 text-sm">
-              Already have an account? 
+              Already have an account?
               <a routerLink="/auth/login" class="text-blue-600 font-bold hover:underline ml-1">Log in here</a>
             </p>
           </div>
         </div>
- 
+    
         <!-- Footer Info -->
         <div class="mt-8 text-center text-[10px] text-slate-400 font-medium uppercase tracking-widest">
           &copy; 2026 Neurogine
         </div>
       </div>
     </div>
-  `,
+    `,
   styles: [`
     :host {
       display: block;
